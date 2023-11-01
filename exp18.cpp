@@ -15,22 +15,66 @@ public:
         head = nullptr;
     }
 
-    void insert(int value) {
+    void insertAtPosition(int value, int position) {
+        if (position < 0) {
+            cout << "Invalid position. Cannot insert." << endl;
+            return;
+        }
+
         Node* newNode = new Node;
         newNode->data = value;
-        newNode->next = head;
-        head = newNode;
+
+        if (position == 0) {
+            newNode->next = head;
+            head = newNode;
+        } else {
+            Node* current = head;
+            int currentPosition = 0;
+
+            while (currentPosition < position - 1 && current != nullptr) {
+                current = current->next;
+                currentPosition++;
+            }
+
+            if (current == nullptr) {
+                cout << "Invalid position. Cannot insert." << endl;
+                delete newNode;
+                return;
+            }
+
+            newNode->next = current->next;
+            current->next = newNode;
+        }
     }
 
-    bool search(int value) {
-        Node* current = head;
-        while (current != nullptr) {
-            if (current->data == value) {
-                return true;
-            }
-            current = current->next;
+    void deleteAtPosition(int position) {
+        if (position < 0 || head == nullptr) {
+            cout << "Invalid position or list is empty. Nothing to delete." << endl;
+            return;
         }
-        return false;
+
+        if (position == 0) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        } else {
+            Node* current = head;
+            int currentPosition = 0;
+
+            while (currentPosition < position - 1 && current->next != nullptr) {
+                current = current->next;
+                currentPosition++;
+            }
+
+            if (current->next == nullptr) {
+                cout << "Invalid position. Cannot delete." << endl;
+                return;
+            }
+
+            Node* temp = current->next;
+            current->next = current->next->next;
+            delete temp;
+        }
     }
 
     void display() {
@@ -47,19 +91,16 @@ public:
 int main() {
     LinkedList myList;
 
-    myList.insert(5);
-    myList.insert(10);
-    myList.insert(15);
+    myList.insertAtPosition(5, 0);
+    myList.insertAtPosition(10, 1);
+    myList.insertAtPosition(15, 1);
 
-    cout << "Linked List: ";
+    cout << "Linked List after insertions: ";
     myList.display();
 
-    int searchValue = 10;
-    if (myList.search(searchValue)) {
-        cout << "Value " << searchValue << " is found in the list." << endl;
-    } else {
-        cout << "Value " << searchValue << " is not found in the list." << endl;
-    }
+    myList.deleteAtPosition(1);
+    cout << "Linked List after deleting at position 1: ";
+    myList.display();
 
     return 0;
 }
