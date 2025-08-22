@@ -8,6 +8,7 @@ struct Node {
     Node* next;
 };
 
+//Hitesh changes - 1
 class LinkedList {
 private:
     Node* head;
